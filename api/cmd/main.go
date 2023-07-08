@@ -2,15 +2,18 @@ package main
 
 import (
 	"fmt"
+	"knowledge-api/internal/config"
 	"knowledge-api/internal/router"
 	"log"
 	"net/http"
 )
 
 func main() {
-	//
-	fmt.Println("[::] Server running on port: 8080")
+	// config.InitEnv()
+	config.InitEnv()
+
+	fmt.Println("[::] Server running on port:", config.Port)
 	r := router.HanlderRoutes()
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", 8080), r))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r))
 }
