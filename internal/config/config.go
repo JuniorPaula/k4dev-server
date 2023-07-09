@@ -12,6 +12,7 @@ import (
 var (
 	ConnectStringMySQL = ""
 	Port               = 0
+	SecretKey          []byte
 )
 
 func InitEnv() {
@@ -30,5 +31,7 @@ func InitEnv() {
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_DATABASE"),
 	)
+
+	SecretKey = []byte(os.Getenv("JWT_SECRET"))
 
 }
