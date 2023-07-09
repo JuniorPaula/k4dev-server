@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"knowledge-api/internal/auth"
 	"strings"
 
 	"github.com/badoux/checkmail"
@@ -46,8 +47,14 @@ func (u *User) validator(step string) error {
 func (u *User) formatFields(step string) error {
 	u.Name = strings.TrimSpace(u.Name)
 	u.Email = strings.TrimSpace(u.Email)
+
 	if step == "create" {
-		u.Password = strings.TrimSpace(u.Password)
+		passwordHashed, err := auth.Hash(u.Password)
+		if err != nil {
+			return err
+		}
+		u.Password = string(passwordHashed)
 	}
+
 	return nil
 }
