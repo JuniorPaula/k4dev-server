@@ -7,6 +7,9 @@ import (
 	"knowledge-api/internal/usecases"
 	"knowledge-api/internal/utils"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -39,4 +42,21 @@ func FindAllUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, users)
+}
+
+func FindUserByID(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userID, err := strconv.ParseInt(params["userId"], 10, 64)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	user, err := usecases.FindUserByIDUSecase(userID)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusNotFound, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, user)
 }

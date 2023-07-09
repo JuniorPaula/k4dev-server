@@ -43,3 +43,20 @@ func FindAllUsersUSecase() ([]models.User, error) {
 
 	return users, nil
 }
+
+func FindUserByIDUSecase(id int64) (models.User, error) {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return models.User{}, err
+	}
+	defer db.Close()
+
+	repo := repository.NewUsersRepository(db)
+
+	user, err := repo.FindUserByID(id)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}

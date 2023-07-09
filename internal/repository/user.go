@@ -56,3 +56,21 @@ func (u *users) FindAllUsers() ([]models.User, error) {
 
 	return users, nil
 }
+
+func (u *users) FindUserByID(id int64) (models.User, error) {
+	rows, err := u.DB.Query("select id, name, email, password, admin from users where id = ?", id)
+	if err != nil {
+		return models.User{}, err
+	}
+	defer rows.Close()
+
+	var user models.User
+
+	if rows.Next() {
+		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Admin); err != nil {
+			return models.User{}, err
+		}
+	}
+
+	return user, nil
+}
