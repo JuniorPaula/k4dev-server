@@ -74,3 +74,17 @@ func (u *users) FindUserByID(id int64) (models.User, error) {
 
 	return user, nil
 }
+
+func (u *users) UpdateUser(id int64, user models.User) error {
+	statment, err := u.DB.Prepare("update users set name = ?, email = ?, password = ?, admin = ? where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err := statment.Exec(user.Name, user.Email, user.Password, user.Admin, id); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -24,4 +24,10 @@ var usersRoutes = []Route{
 		Func:    handlers.FindUserByID,
 		HasAuth: false,
 	},
+	{
+		URI:     "/users/{userId}",
+		Method:  http.MethodPut,
+		Func:    handlers.UpdateUser,
+		HasAuth: true,
+	},
 }

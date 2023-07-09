@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
+	"knowledge-api/internal/auth"
 	"knowledge-api/internal/models"
 	"knowledge-api/internal/usecases"
 	"knowledge-api/internal/utils"
@@ -59,4 +61,44 @@ func FindUserByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, user)
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userID, err := strconv.ParseInt(params["userId"], 10, 60)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	userIDInToken, err := auth.GetUserID(r)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	if userID != userIDInToken {
+		utils.ErrorJSON(w, http.StatusForbidden, errors.New("you are not authorized for this operation"))
+		return
+	}
+
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	var user models.User
+	if err = json.Unmarshal(reqBody, &user); err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	err = usecases.UpdateUserUSecase(userID, user)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusNoContent, nil)
 }

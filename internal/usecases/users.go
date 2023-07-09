@@ -60,3 +60,23 @@ func FindUserByIDUSecase(id int64) (models.User, error) {
 
 	return user, nil
 }
+
+func UpdateUserUSecase(userID int64, u models.User) error {
+
+	if err := u.HanlderUser("updated"); err != nil {
+		return err
+	}
+
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	repo := repository.NewUsersRepository(db)
+	if err := repo.UpdateUser(userID, u); err != nil {
+		return err
+	}
+
+	return nil
+}
