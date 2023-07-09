@@ -36,4 +36,10 @@ var usersRoutes = []Route{
 		Func:    handlers.DeleteUser,
 		HasAuth: true,
 	},
+	{
+		URI:     "/users/{userId}/update-password",
+		Method:  http.MethodPost,
+		Func:    handlers.UpdatePassword,
+		HasAuth: true,
+	},
 }

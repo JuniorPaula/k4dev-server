@@ -120,3 +120,34 @@ func (u *users) DeleteUser(userID int64) error {
 
 	return nil
 }
+
+func (u *users) FindPasswordByUserID(userID int64) (string, error) {
+	row, err := u.DB.Query("select password from users where id = ?", userID)
+	if err != nil {
+		return "", err
+	}
+	defer row.Close()
+
+	var user models.User
+	if row.Next() {
+		if err = row.Scan(&user.Password); err != nil {
+			return "", err
+		}
+	}
+
+	return user.Password, nil
+}
+
+func (u *users) UpdatePassword(userID int64, password string) error {
+	statment, err := u.DB.Prepare("update users set password = ? where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err = statment.Exec(password, userID); err != nil {
+		return err
+	}
+
+	return nil
+}
