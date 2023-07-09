@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"knowledge-api/internal/auth"
 	"knowledge-api/internal/models"
@@ -77,11 +76,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if userID != userIDInToken {
-		utils.ErrorJSON(w, http.StatusForbidden, errors.New("you are not authorized for this operation"))
-		return
-	}
-
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		utils.ErrorJSON(w, http.StatusBadRequest, err)
@@ -94,7 +88,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = usecases.UpdateUserUSecase(userID, user)
+	err = usecases.UpdateUserUSecase(userID, userIDInToken, user)
 	if err != nil {
 		utils.ErrorJSON(w, http.StatusBadRequest, err)
 		return

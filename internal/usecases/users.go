@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"errors"
-	"fmt"
 	"knowledge-api/internal/database"
 	"knowledge-api/internal/models"
 	"knowledge-api/internal/repository"
@@ -63,8 +62,7 @@ func FindUserByIDUSecase(id int64) (models.User, error) {
 	return user, nil
 }
 
-func UpdateUserUSecase(userID int64, u models.User) error {
-
+func UpdateUserUSecase(userID, userIDInToken int64, u models.User) error {
 	if err := u.HanlderUser("updated"); err != nil {
 		return err
 	}
@@ -76,6 +74,15 @@ func UpdateUserUSecase(userID int64, u models.User) error {
 	defer db.Close()
 
 	repo := repository.NewUsersRepository(db)
+	userFromDB, err := repo.FindUserByID(userIDInToken)
+	if err != nil {
+		return err
+	}
+
+	if userIDInToken != userID && !userFromDB.Admin {
+		return errors.New("you don't have permission to delete this user")
+	}
+
 	if err := repo.UpdateUser(userID, u); err != nil {
 		return err
 	}
@@ -91,13 +98,11 @@ func DeleteUserUsecase(userID, userIDInToken int64) error {
 	defer db.Close()
 
 	repo := repository.NewUsersRepository(db)
-	userFromDB, err := repo.FindUserByID(userID)
+	userFromDB, err := repo.FindUserByID(userIDInToken)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(!userFromDB.Admin)
-	fmt.Println(userIDInToken != userID)
 	if userIDInToken != userID && !userFromDB.Admin {
 		return errors.New("you don't have permission to delete this user")
 	}
