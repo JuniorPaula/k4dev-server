@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	ConnectStringPostgres = ""
-	Port                  = 0
+	ConnectStringMySQL = ""
+	Port               = 0
 )
 
 func InitEnv() {
@@ -25,11 +25,10 @@ func InitEnv() {
 		Port = 9000
 	}
 
-	ConnectStringPostgres = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		os.Getenv("POSTGRES_USER"),
-		os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_HOST"),
-		os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_DB"),
+	ConnectStringMySQL = fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_DATABASE"),
 	)
+
 }

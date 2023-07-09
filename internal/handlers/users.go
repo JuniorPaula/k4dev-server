@@ -28,7 +28,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := database.ConnectToDB()
+	db, err := database.Connect_MySQL()
 	if err != nil {
 		utils.ErrorJSON(w, http.StatusInternalServerError, err)
 		return
