@@ -26,7 +26,7 @@ func TokenValidate(r *http.Request) error {
 	strToken := getToken(r)
 	token, err := jwt.Parse(strToken, getValidKeyAuthentication)
 	if err != nil {
-		return err
+		return errors.New("unauthorized")
 	}
 
 	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
@@ -39,13 +39,13 @@ func GetUserID(r *http.Request) (int64, error) {
 	strToken := getToken(r)
 	token, err := jwt.Parse(strToken, getValidKeyAuthentication)
 	if err != nil {
-		return 0, err
+		return 0, errors.New("unauthorized")
 	}
 
 	if permissions, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		userID, err := strconv.ParseInt(fmt.Sprintf("%.0f", permissions["userId"]), 10, 64)
 		if err != nil {
-			return 0, err
+			return 0, errors.New("unauthorized")
 		}
 		return userID, nil
 	}
