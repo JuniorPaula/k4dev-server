@@ -106,3 +106,17 @@ func (u *users) FindUserByEmail(email string) (models.User, error) {
 
 	return user, nil
 }
+
+func (u *users) DeleteUser(userID int64) error {
+	statment, err := u.DB.Prepare("delete from users where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err := statment.Exec(userID); err != nil {
+		return err
+	}
+
+	return nil
+}

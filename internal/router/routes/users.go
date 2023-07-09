@@ -30,4 +30,10 @@ var usersRoutes = []Route{
 		Func:    handlers.UpdateUser,
 		HasAuth: true,
 	},
+	{
+		URI:     "/users/{userId}",
+		Method:  http.MethodDelete,
+		Func:    handlers.DeleteUser,
+		HasAuth: true,
+	},
 }
