@@ -30,3 +30,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusCreated, user)
 }
+
+func FindAllUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := usecases.FindAllUsersUSecase()
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, users)
+}

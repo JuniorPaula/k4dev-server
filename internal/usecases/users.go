@@ -26,3 +26,20 @@ func CreateUserUSecase(u models.User) (models.User, error) {
 
 	return u, nil
 }
+
+func FindAllUsersUSecase() ([]models.User, error) {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	repo := repository.NewUsersRepository(db)
+
+	users, err := repo.FindAllUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

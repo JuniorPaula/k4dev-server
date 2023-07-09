@@ -34,3 +34,25 @@ func (u *users) CreateUser(user models.User) (int64, error) {
 
 	return int64(lstID), nil
 }
+
+func (u *users) FindAllUsers() ([]models.User, error) {
+	rows, err := u.DB.Query("select id, name, email, password, admin from users")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []models.User
+
+	for rows.Next() {
+		var user models.User
+
+		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Admin); err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}
