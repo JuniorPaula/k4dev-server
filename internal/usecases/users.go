@@ -65,6 +65,7 @@ func FindUserByIDUSecase(id int64) (models.User, error) {
 func UpdateUserUSecase(userID, userIDInToken int64, u models.User) error {
 	if err := u.HanlderUser("updated"); err != nil {
 		return err
+
 	}
 
 	db, err := database.Connect_MySQL()
@@ -81,6 +82,14 @@ func UpdateUserUSecase(userID, userIDInToken int64, u models.User) error {
 
 	if userIDInToken != userID && !userFromDB.Admin {
 		return errors.New("you don't have permission to delete this user")
+	}
+
+	if u.Name == "" {
+		u.Name = userFromDB.Name
+	}
+
+	if u.Email == "" {
+		u.Email = userFromDB.Email
 	}
 
 	if err := repo.UpdateUser(userID, u); err != nil {
