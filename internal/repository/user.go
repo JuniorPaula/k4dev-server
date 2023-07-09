@@ -88,3 +88,21 @@ func (u *users) UpdateUser(id int64, user models.User) error {
 
 	return nil
 }
+
+func (u *users) FindUserByEmail(email string) (models.User, error) {
+	rows, err := u.DB.Query("select id, name, email, password, admin from users where email = ?", email)
+	if err != nil {
+		return models.User{}, err
+	}
+	defer rows.Close()
+
+	var user models.User
+
+	if rows.Next() {
+		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Admin); err != nil {
+			return models.User{}, err
+		}
+	}
+
+	return user, nil
+}
