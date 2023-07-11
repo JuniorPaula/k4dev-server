@@ -18,6 +18,7 @@ func SetUpRoutes(r *mux.Router) *mux.Router {
 	routes := homeRoutes
 	routes = append(routes, loginRoute)
 	routes = append(routes, usersRoutes...)
+	routes = append(routes, categoryRoutes...)
 
 	for _, route := range routes {
 
