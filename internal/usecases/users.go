@@ -161,3 +161,26 @@ func UpdatedUserPasswordUsecase(userID, userIDInToken int64, password models.Pas
 
 	return nil
 }
+
+func UpdateUserRoleUsecase(userID, userIDInToken int64, role models.AuthDTO) error {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	repo := repository.NewUsersRepository(db)
+	userFromDB, err := repo.FindUserByID(userIDInToken)
+	if err != nil {
+		return err
+	}
+
+	if userIDInToken != userID && !userFromDB.Admin {
+		return errors.New("you dont't have permission of the operation")
+	}
+
+	if err = repo.UpdateUserRole(userID, role.Role); err != nil {
+		return err
+	}
+
+	return nil
+}

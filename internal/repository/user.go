@@ -151,3 +151,17 @@ func (u *users) UpdatePassword(userID int64, password string) error {
 
 	return nil
 }
+
+func (u *users) UpdateUserRole(userID int64, role bool) error {
+	statment, err := u.DB.Prepare("update users set admin = ? where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err = statment.Exec(role, userID); err != nil {
+		return err
+	}
+
+	return nil
+}

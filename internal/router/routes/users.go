@@ -42,4 +42,10 @@ var usersRoutes = []Route{
 		Func:    handlers.UpdatePassword,
 		HasAuth: true,
 	},
+	{
+		URI:     "/users/{userId}/update-role",
+		Method:  http.MethodPost,
+		Func:    handlers.UpdateUserRole,
+		HasAuth: true,
+	},
 }

@@ -3,6 +3,7 @@ package models
 type AuthDTO struct {
 	UserID string `json:"user_id"`
 	Token  string `json:"token"`
+	Role   bool   `json:"role"`
 }
 
 type PasswordDTO struct {

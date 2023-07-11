@@ -155,3 +155,38 @@ func UpdatePassword(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusNoContent, nil)
 
 }
+
+func UpdateUserRole(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userID, err := strconv.ParseInt(params["userId"], 10, 64)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+	userIDInToken, err := auth.GetUserID(r)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	var role models.AuthDTO
+	if err = json.Unmarshal(reqBody, &role); err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	err = usecases.UpdateUserRoleUsecase(userID, userIDInToken, role)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusNoContent, nil)
+
+}
