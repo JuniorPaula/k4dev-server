@@ -21,6 +21,15 @@ func CreateUserUSecase(u models.User) (models.User, error) {
 
 	repo := repository.NewUsersRepository(db)
 
+	userFromDB, err := repo.FindUserByEmail(u.Email)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	if userFromDB.Email == u.Email {
+		return models.User{}, errors.New("email already exists")
+	}
+
 	u.ID, err = repo.CreateUser(u)
 	if err != nil {
 		return models.User{}, err
