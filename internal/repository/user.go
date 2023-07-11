@@ -36,7 +36,7 @@ func (u *users) CreateUser(user models.User) (int64, error) {
 }
 
 func (u *users) FindAllUsers() ([]models.User, error) {
-	rows, err := u.DB.Query("select id, name, email, password, admin from users")
+	rows, err := u.DB.Query("select id, name, email, admin from users")
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (u *users) FindAllUsers() ([]models.User, error) {
 	for rows.Next() {
 		var user models.User
 
-		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Admin); err != nil {
+		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Admin); err != nil {
 			return nil, err
 		}
 
