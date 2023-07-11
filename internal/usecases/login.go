@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"errors"
 	"knowledge-api/internal/auth"
 	"knowledge-api/internal/database"
 	"knowledge-api/internal/models"
@@ -22,7 +23,7 @@ func LoginUsecase(user models.User) (models.AuthDTO, error) {
 	}
 
 	if err = auth.CompareHash(userFromDB.Password, user.Password); err != nil {
-		return models.AuthDTO{}, err
+		return models.AuthDTO{}, errors.New("invalid credentials")
 	}
 
 	token, err := auth.TokenGenerator(userFromDB.ID)
