@@ -46,3 +46,17 @@ func (c *category) CreateCategory(category models.Category) (int64, error) {
 	return int64(lstID), nil
 
 }
+
+func (c *category) UpdateCategory(id int64, category models.Category) error {
+	statment, err := c.DB.Prepare("update categories set name = ? where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err := statment.Exec(category.Name, id); err != nil {
+		return nil
+	}
+
+	return nil
+}
