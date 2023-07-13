@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"knowledge-api/internal/models"
+	"strings"
 )
 
 type category struct {
@@ -16,13 +17,23 @@ func NewCategoryRepository(db *sql.DB) *category {
 }
 
 func (c *category) CreateCategory(category models.Category) (int64, error) {
-	statment, err := c.DB.Prepare("insert into categories (name, parent_id) values (?, ?)")
+	query := "insert into categories (name"
+	values := []interface{}{category.Name}
+
+	if category.ParentID != 0 {
+		query += ", parent_id"
+		values = append(values, category.ParentID)
+	}
+
+	query += ") values (?" + strings.Repeat(", ?", len(values)-1) + ")"
+
+	statment, err := c.DB.Prepare(query)
 	if err != nil {
 		return 0, err
 	}
 	defer statment.Close()
 
-	result, err := statment.Exec(category.Name, category.ParentID)
+	result, err := statment.Exec(values...)
 	if err != nil {
 		return 0, err
 	}
@@ -33,4 +44,5 @@ func (c *category) CreateCategory(category models.Category) (int64, error) {
 	}
 
 	return int64(lstID), nil
+
 }

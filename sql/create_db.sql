@@ -16,7 +16,7 @@ CREATE TABLE users(
 CREATE TABLE categories(
     id int auto_increment primary key,
     name varchar(50) not null,
-    parent_id int,
+    parent_id int null,
     FOREIGN KEY (parent_id) REFERENCES categories(id),
     createdAt timestamp default current_timestamp()
 ) ENGINE=INNODB;
