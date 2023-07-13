@@ -12,4 +12,10 @@ var categoryRoutes = []Route{
 		Func:    handlers.CreateCategory,
 		HasAuth: true,
 	},
+	{
+		URI:     "/category/{categoryId}",
+		Method:  http.MethodPut,
+		Func:    handlers.UpdateCategory,
+		HasAuth: true,
+	},
 }
