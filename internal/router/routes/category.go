@@ -18,4 +18,10 @@ var categoryRoutes = []Route{
 		Func:    handlers.UpdateCategory,
 		HasAuth: true,
 	},
+	{
+		URI:     "/category/delete/{categoryId}",
+		Method:  http.MethodDelete,
+		Func:    handlers.DeleteCategory,
+		HasAuth: true,
+	},
 }
