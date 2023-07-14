@@ -27,6 +27,22 @@ func CreateCategoryUSecase(c models.Category) (models.Category, error) {
 	return c, nil
 }
 
+func GetAllCategoriesUsecase() ([]models.Category, error) {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	repo := repository.NewCategoryRepository(db)
+	categories, err := repo.GetAllCategories()
+	if err != nil {
+		return nil, err
+	}
+
+	return categories, nil
+}
+
 func UpdateCategoryUsecase(id, userIDInToken int64, c models.Category) error {
 	if err := c.HanlderCategory(); err != nil {
 		return err

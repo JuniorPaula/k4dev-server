@@ -47,6 +47,32 @@ func (c *category) CreateCategory(category models.Category) (int64, error) {
 
 }
 
+func (c *category) GetAllCategories() ([]models.Category, error) {
+	rows, err := c.DB.Query("select id, name, parent_id from categories")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var categories []models.Category
+	for rows.Next() {
+		var category models.Category
+		var parentID sql.NullInt64
+		if err := rows.Scan(&category.ID, &category.Name, &parentID); err != nil {
+			return nil, err
+		}
+
+		if parentID.Valid {
+			category.ParentID = parentID.Int64
+		}
+
+		categories = append(categories, category)
+	}
+
+	return categories, nil
+
+}
+
 func (c *category) UpdateCategory(id int64, category models.Category) error {
 	statment, err := c.DB.Prepare("update categories set name = ? where id = ?")
 	if err != nil {

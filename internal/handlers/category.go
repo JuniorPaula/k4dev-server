@@ -35,6 +35,18 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusCreated, category)
 }
 
+func GetAllCategories(w http.ResponseWriter, r *http.Request) {
+	categories, err := usecases.GetAllCategoriesUsecase()
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+	var category models.Category
+	categories = category.WithPath(categories)
+
+	utils.WriteJSON(w, http.StatusOK, categories)
+}
+
 func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	categoryID, err := strconv.ParseInt(params["categoryId"], 10, 64)

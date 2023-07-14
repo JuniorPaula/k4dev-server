@@ -23,5 +23,10 @@ var categoryRoutes = []Route{
 		Method:  http.MethodDelete,
 		Func:    handlers.DeleteCategory,
 		HasAuth: true,
+	}, {
+		URI:     "/category",
+		Method:  http.MethodGet,
+		Func:    handlers.GetAllCategories,
+		HasAuth: true,
 	},
 }
