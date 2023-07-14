@@ -60,3 +60,36 @@ func (c *category) UpdateCategory(id int64, category models.Category) error {
 
 	return nil
 }
+
+func (c *category) DeleteCategory(id int64) error {
+	statment, err := c.DB.Prepare("delete from categories where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err := statment.Exec(id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *category) VerifyCategoryHasParentID(id int64) (bool, error) {
+	statment, err := c.DB.Prepare("select * from categories where parent_id = ?")
+	if err != nil {
+		return false, err
+	}
+	defer statment.Close()
+
+	rows, err := statment.Query(id)
+	if err != nil {
+		return false, err
+	}
+
+	if rows.Next() {
+		return true, nil
+	}
+
+	return false, nil
+}

@@ -57,3 +57,41 @@ func UpdateCategoryUsecase(id, userIDInToken int64, c models.Category) error {
 
 	return nil
 }
+
+func DeleteCategoryUsecase(id, userIDInToken int64, c models.Category) error {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return errors.New("error connect database")
+	}
+	defer db.Close()
+
+	categoryRepo := repository.NewCategoryRepository(db)
+	userRepo := repository.NewUsersRepository(db)
+
+	userFromDB, err := userRepo.FindUserByID(userIDInToken)
+	if err != nil {
+		return err
+	}
+
+	if !userFromDB.Admin {
+		return errors.New("user not have permission")
+	}
+
+	ok, err := categoryRepo.VerifyCategoryHasParentID(id)
+	if err != nil {
+		return err
+	}
+	if ok {
+		return errors.New("category has sub category, please delete it first")
+	}
+
+	// TODO - implements the same validation for articles
+
+	err = categoryRepo.DeleteCategory(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

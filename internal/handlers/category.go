@@ -84,17 +84,7 @@ func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		utils.ErrorJSON(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-
 	var category models.Category
-	if err := json.Unmarshal(body, &category); err != nil {
-		utils.ErrorJSON(w, http.StatusUnprocessableEntity, err)
-		return
-	}
 
 	err = usecases.DeleteCategoryUsecase(categoryID, userIDInToken, category)
 	if err != nil {
