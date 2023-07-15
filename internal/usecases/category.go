@@ -27,7 +27,7 @@ func CreateCategoryUSecase(c models.Category) (models.Category, error) {
 	return c, nil
 }
 
-func GetAllCategoriesUsecase() ([]models.Category, error) {
+func FindAllCategoriesUsecase() ([]models.Category, error) {
 	db, err := database.Connect_MySQL()
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func GetAllCategoriesUsecase() ([]models.Category, error) {
 	defer db.Close()
 
 	repo := repository.NewCategoryRepository(db)
-	categories, err := repo.GetAllCategories()
+	categories, err := repo.FindAllCategories()
 	if err != nil {
 		return nil, err
 	}

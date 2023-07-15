@@ -35,8 +35,8 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusCreated, category)
 }
 
-func GetAllCategories(w http.ResponseWriter, r *http.Request) {
-	categories, err := usecases.GetAllCategoriesUsecase()
+func FindAllCategories(w http.ResponseWriter, r *http.Request) {
+	categories, err := usecases.FindAllCategoriesUsecase()
 	if err != nil {
 		utils.ErrorJSON(w, http.StatusBadRequest, err)
 		return

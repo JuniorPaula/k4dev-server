@@ -26,7 +26,7 @@ var categoryRoutes = []Route{
 	}, {
 		URI:     "/category",
 		Method:  http.MethodGet,
-		Func:    handlers.GetAllCategories,
+		Func:    handlers.FindAllCategories,
 		HasAuth: true,
 	},
 }

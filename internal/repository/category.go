@@ -47,7 +47,7 @@ func (c *category) CreateCategory(category models.Category) (int64, error) {
 
 }
 
-func (c *category) GetAllCategories() ([]models.Category, error) {
+func (c *category) FindAllCategories() ([]models.Category, error) {
 	rows, err := c.DB.Query("select id, name, parent_id from categories")
 	if err != nil {
 		return nil, err
