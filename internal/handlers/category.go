@@ -47,6 +47,23 @@ func FindAllCategories(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, categories)
 }
 
+func FindCategoryByID(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	categoryID, err := strconv.ParseInt(params["categoryId"], 10, 64)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	category, err := usecases.FindCategoryByIDUsecase(categoryID)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, category)
+}
+
 func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	categoryID, err := strconv.ParseInt(params["categoryId"], 10, 64)

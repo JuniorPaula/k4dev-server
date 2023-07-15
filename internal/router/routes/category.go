@@ -29,4 +29,10 @@ var categoryRoutes = []Route{
 		Func:    handlers.FindAllCategories,
 		HasAuth: true,
 	},
+	{
+		URI:     "/category/{categoryId}",
+		Method:  http.MethodGet,
+		Func:    handlers.FindCategoryByID,
+		HasAuth: true,
+	},
 }

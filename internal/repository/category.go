@@ -73,6 +73,27 @@ func (c *category) FindAllCategories() ([]models.Category, error) {
 
 }
 
+func (c *category) FindCategoryByID(id int64) (models.Category, error) {
+	var category models.Category
+	var parentID sql.NullInt64
+
+	statment, err := c.DB.Prepare("select id, name, parent_id from categories where id = ?")
+	if err != nil {
+		return category, err
+	}
+	defer statment.Close()
+
+	if err := statment.QueryRow(id).Scan(&category.ID, &category.Name, &parentID); err != nil {
+		return category, err
+	}
+
+	if parentID.Valid {
+		category.ParentID = parentID.Int64
+	}
+
+	return category, nil
+}
+
 func (c *category) UpdateCategory(id int64, category models.Category) error {
 	statment, err := c.DB.Prepare("update categories set name = ? where id = ?")
 	if err != nil {
