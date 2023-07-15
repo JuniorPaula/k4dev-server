@@ -47,6 +47,20 @@ func FindAllCategories(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, categories)
 }
 
+func FindCategoryWithTree(w http.ResponseWriter, r *http.Request) {
+	categories, err := usecases.FindAllCategoriesUsecase()
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	var category models.Category
+	categories = category.WithPath(categories)
+	categories = category.ToTree(categories, nil)
+
+	utils.WriteJSON(w, http.StatusOK, categories)
+}
+
 func FindCategoryByID(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	categoryID, err := strconv.ParseInt(params["categoryId"], 10, 64)

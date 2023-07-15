@@ -30,6 +30,12 @@ var categoryRoutes = []Route{
 		HasAuth: true,
 	},
 	{
+		URI:     "/category/tree",
+		Method:  http.MethodGet,
+		Func:    handlers.FindCategoryWithTree,
+		HasAuth: true,
+	},
+	{
 		URI:     "/category/{categoryId}",
 		Method:  http.MethodGet,
 		Func:    handlers.FindCategoryByID,
