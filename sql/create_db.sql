@@ -3,6 +3,7 @@ USE knowledge;
 
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS articles;
 
 CREATE TABLE users(
     id int auto_increment primary key,
@@ -20,3 +21,16 @@ CREATE TABLE categories(
     FOREIGN KEY (parent_id) REFERENCES categories(id),
     createdAt timestamp default current_timestamp()
 ) ENGINE=INNODB;
+
+CREATE TABLE articles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(1000) NOT NULL,
+    image_url VARCHAR(1000),
+    content LONGBLOB NOT NULL,
+    user_id INT NOT NULL,
+    category_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (category_id) REFERENCES categories(id),
+    createdAt timestamp default current_timestamp()
+)ENGINE=INNODB;
