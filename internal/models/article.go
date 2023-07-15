@@ -9,8 +9,8 @@ type Article struct {
 	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	ImageURL    string `json:"image_url"`
-	Content     []byte `json:"content"`
+	ImageURL    string `json:"image_url,omitempty"`
+	Content     string `json:"content"`
 	UserID      int64  `json:"user_id"`
 	CategoryID  int64  `json:"category_id"`
 }
@@ -19,7 +19,6 @@ func (a *Article) HandeArticles() error {
 	requiredFields := map[string]string{
 		"name":        a.Name,
 		"description": a.Description,
-		"image_url":   a.ImageURL,
 		"content":     string(a.Content),
 		"user_id":     fmt.Sprint(a.UserID),
 		"category_id": fmt.Sprint(a.CategoryID),

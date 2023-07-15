@@ -17,6 +17,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var article models.Article
+
 	if err = json.Unmarshal(body, &article); err != nil {
 		utils.ErrorJSON(w, http.StatusBadRequest, err)
 		return
