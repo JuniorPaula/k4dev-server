@@ -50,6 +50,32 @@ func FindAllArticlesUsecase(page, pageSize int) ([]models.Article, error) {
 	return articles, nil
 }
 
+func FindCategoryWithChildrenUsecase(categoryID int64, page, limit int) ([]models.Article, error) {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	categoryRepo := repository.NewCategoryRepository(db)
+	articlesRepo := repository.NewArticleRepository(db)
+
+	categories, err := categoryRepo.FindAllCategories()
+	if err != nil {
+		return nil, err
+	}
+
+	var category models.Category
+	categoryIDs := category.FindSubcategories(categories, categoryID)
+
+	articles, err := articlesRepo.FindCategoryWithChildren(categoryIDs, page, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	return articles, nil
+}
+
 func FindArticleByIDUsecase(id int64) (models.Article, error) {
 	db, err := database.Connect_MySQL()
 	if err != nil {

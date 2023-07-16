@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"knowledge-api/internal/models"
+	"strings"
 )
 
 type article struct {
@@ -119,4 +120,47 @@ func (a *article) CountArticles() (int, error) {
 	}
 
 	return count, nil
+}
+
+func (a *article) FindCategoryWithChildren(ids []int, page, limit int) ([]models.Article, error) {
+	offset := (page - 1) * limit
+
+	query := `
+	SELECT a.id, a.name, a.description, a.content, a.user_id, a.category_id, a.image_url, u.name AS author
+	FROM articles a
+	JOIN users u ON u.id = a.user_id
+	WHERE a.category_id IN (` + strings.Join(strings.Split(strings.Repeat("?", len(ids)), ""), ", ") + `)
+	ORDER BY a.id DESC
+	LIMIT ? OFFSET ?
+	`
+
+	values := make([]interface{}, 0, len(ids)+2)
+	for _, id := range ids {
+		values = append(values, id)
+	}
+	values = append(values, limit, offset)
+
+	rows, err := a.DB.Query(query, values...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var articles []models.Article
+	for rows.Next() {
+		var article models.Article
+
+		if err := rows.Scan(&article.ID, &article.Name, &article.Description, &article.Content, &article.UserID, &article.CategoryID, &article.ImageURL, &article.Author); err != nil {
+			return nil, err
+		}
+
+		article.Content = string(article.Content)
+		articles = append(articles, article)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return articles, nil
 }

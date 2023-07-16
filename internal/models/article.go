@@ -13,6 +13,7 @@ type Article struct {
 	Content     string `json:"content"`
 	UserID      int64  `json:"user_id"`
 	CategoryID  int64  `json:"category_id"`
+	Author      string `json:"author,omitempty"`
 }
 
 func (a *Article) HandeArticles() error {
