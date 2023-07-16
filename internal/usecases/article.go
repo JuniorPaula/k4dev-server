@@ -30,6 +30,26 @@ func CreateArticleUsecase(article models.Article) (models.Article, error) {
 	return article, nil
 }
 
+func FindAllArticlesUsecase(page, pageSize int) ([]models.Article, error) {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return []models.Article{}, err
+	}
+	defer db.Close()
+
+	articleRepo := repository.NewArticleRepository(db)
+	if err != nil {
+		return []models.Article{}, err
+	}
+
+	articles, err := articleRepo.FindAllArticles(page, pageSize)
+	if err != nil {
+		return []models.Article{}, err
+	}
+
+	return articles, nil
+}
+
 func FindArticleByIDUsecase(id int64) (models.Article, error) {
 	db, err := database.Connect_MySQL()
 	if err != nil {
@@ -106,4 +126,21 @@ func DeleteArticleUsecase(id, userIDInToken int64) error {
 	}
 
 	return nil
+}
+
+func CountArticlesUsecase() (int, error) {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return 0, err
+	}
+	defer db.Close()
+
+	articleRepo := repository.NewArticleRepository(db)
+
+	count, err := articleRepo.CountArticles()
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }

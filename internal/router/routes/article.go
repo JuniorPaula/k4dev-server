@@ -30,4 +30,10 @@ var articleRoutes = []Route{
 		Func:    handlers.FindArticleByID,
 		HasAuth: true,
 	},
+	{
+		URI:     "/articles",
+		Method:  http.MethodGet,
+		Func:    handlers.FindAllArticles,
+		HasAuth: true,
+	},
 }

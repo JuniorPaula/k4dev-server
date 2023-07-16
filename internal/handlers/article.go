@@ -13,6 +13,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var limit = 10
+
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -34,6 +36,31 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusCreated, article)
+}
+
+func FindAllArticles(w http.ResponseWriter, r *http.Request) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		page = 1
+	}
+
+	count, err := usecases.CountArticlesUsecase()
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	articles, err := usecases.FindAllArticlesUsecase(page, limit)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, map[string]interface{}{
+		"data":  articles,
+		"count": count,
+		"limit": limit,
+	})
 }
 
 func FindArticleByID(w http.ResponseWriter, r *http.Request) {
