@@ -12,4 +12,10 @@ var articleRoutes = []Route{
 		Func:    handlers.CreateArticle,
 		HasAuth: true,
 	},
+	{
+		URI:     "/articles/{articleId}",
+		Method:  http.MethodPut,
+		Func:    handlers.UpdateArticle,
+		HasAuth: true,
+	},
 }
