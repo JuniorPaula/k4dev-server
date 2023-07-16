@@ -36,6 +36,23 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusCreated, article)
 }
 
+func FindArticleByID(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	articleID, err := strconv.ParseInt(params["articleId"], 10, 64)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	article, err := usecases.FindArticleByIDUsecase(articleID)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, article)
+}
+
 func UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	articleID, err := strconv.ParseInt(params["articleId"], 10, 64)

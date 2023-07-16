@@ -24,4 +24,10 @@ var articleRoutes = []Route{
 		Func:    handlers.DeleteArticle,
 		HasAuth: true,
 	},
+	{
+		URI:     "/articles/{articleId}",
+		Method:  http.MethodGet,
+		Func:    handlers.FindArticleByID,
+		HasAuth: true,
+	},
 }

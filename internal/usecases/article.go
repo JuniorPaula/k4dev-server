@@ -30,6 +30,25 @@ func CreateArticleUsecase(article models.Article) (models.Article, error) {
 	return article, nil
 }
 
+func FindArticleByIDUsecase(id int64) (models.Article, error) {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return models.Article{}, err
+	}
+	defer db.Close()
+
+	articleRepo := repository.NewArticleRepository(db)
+
+	article, err := articleRepo.FindArticleByID(id)
+	if err != nil {
+		return article, err
+	}
+
+	article.Content = string(article.Content)
+
+	return article, nil
+}
+
 func UpdateArticlesUsecase(id, userIDInToken int64, a models.Article) error {
 	if err := a.HandeArticles(); err != nil {
 		return err
