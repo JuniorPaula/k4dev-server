@@ -57,3 +57,34 @@ func UpdateArticlesUsecase(id, userIDInToken int64, a models.Article) error {
 
 	return nil
 }
+
+func DeleteArticleUsecase(id, userIDInToken int64) error {
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	articleRepo := repository.NewArticleRepository(db)
+	articleFromDB, err := articleRepo.FindArticleByID(id)
+	if err != nil {
+		return err
+	}
+
+	userRepo := repository.NewUsersRepository(db)
+	userFromDB, err := userRepo.FindUserByID(userIDInToken)
+
+	if err != nil {
+		return err
+	}
+
+	if !userFromDB.Admin && userIDInToken != articleFromDB.UserID {
+		return errors.New("you are not the owner of this article")
+	}
+
+	if err := articleRepo.DeleteArticle(id); err != nil {
+		return err
+	}
+
+	return nil
+}

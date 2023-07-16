@@ -69,3 +69,25 @@ func UpdateArticle(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusNoContent, nil)
 }
+
+func DeleteArticle(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	articleID, err := strconv.ParseInt(params["articleId"], 10, 64)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	userIDInToken, err := auth.GetUserID(r)
+	if err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if err = usecases.DeleteArticleUsecase(articleID, userIDInToken); err != nil {
+		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusNoContent, nil)
+}

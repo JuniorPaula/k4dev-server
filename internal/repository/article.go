@@ -64,3 +64,17 @@ func (a *article) FindArticleByID(id int64) (models.Article, error) {
 
 	return article, nil
 }
+
+func (a *article) DeleteArticle(id int64) error {
+	statment, err := a.DB.Prepare("delete from articles where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err := statment.Exec(id); err != nil {
+		return err
+	}
+
+	return nil
+}
