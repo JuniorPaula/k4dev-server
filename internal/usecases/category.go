@@ -98,6 +98,7 @@ func DeleteCategoryUsecase(id, userIDInToken int64, c models.Category) error {
 	defer db.Close()
 
 	categoryRepo := repository.NewCategoryRepository(db)
+	articleRepo := repository.NewArticleRepository(db)
 	userRepo := repository.NewUsersRepository(db)
 
 	userFromDB, err := userRepo.FindUserByID(userIDInToken)
@@ -117,7 +118,13 @@ func DeleteCategoryUsecase(id, userIDInToken int64, c models.Category) error {
 		return errors.New("category has sub category, please delete it first")
 	}
 
-	// TODO - implements the same validation for articles
+	ok, err = articleRepo.VerifyArticleHasCategoryID(id)
+	if err != nil {
+		return err
+	}
+	if ok {
+		return errors.New("category has articles, please delete it first")
+	}
 
 	err = categoryRepo.DeleteCategory(id)
 	if err != nil {

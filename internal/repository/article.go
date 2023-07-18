@@ -164,3 +164,22 @@ func (a *article) FindCategoryWithChildren(ids []int, page, limit int) ([]models
 
 	return articles, nil
 }
+
+func (a *article) VerifyArticleHasCategoryID(categoryID int64) (bool, error) {
+	statment, err := a.DB.Prepare("select * from articles where category_id = ?")
+	if err != nil {
+		return false, err
+	}
+	defer statment.Close()
+
+	rows, err := statment.Query(categoryID)
+	if err != nil {
+		return false, err
+	}
+
+	if rows.Next() {
+		return true, nil
+	}
+
+	return false, nil
+}
