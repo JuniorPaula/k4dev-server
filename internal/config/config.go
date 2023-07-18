@@ -33,12 +33,11 @@ func InitEnv() {
 		os.Getenv("DB_DATABASE"),
 	)
 
-	ConnetStringMongoDB = fmt.Sprintf("mongodb://%s:%s@%s:%s/%s",
-		os.Getenv("MONGO_USER"),
-		os.Getenv("MONGO_PASSWORD"),
+	ConnetStringMongoDB = fmt.Sprintf("mongodb://%s:%s@%s:%s",
+		os.Getenv("MONGO_INITDB_ROOT_USERNAME"),
+		os.Getenv("MONGO_INITDB_ROOT_PASSWORD"),
 		os.Getenv("MONGO_HOST"),
 		os.Getenv("MONGO_PORT"),
-		os.Getenv("MONGO_DATABASE"),
 	)
 
 	SecretKey = []byte(os.Getenv("JWT_SECRET"))

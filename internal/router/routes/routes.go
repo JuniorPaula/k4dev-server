@@ -20,6 +20,7 @@ func SetUpRoutes(r *mux.Router) *mux.Router {
 	routes = append(routes, usersRoutes...)
 	routes = append(routes, categoryRoutes...)
 	routes = append(routes, articleRoutes...)
+	routes = append(routes, statsRoutes...)
 
 	for _, route := range routes {
 

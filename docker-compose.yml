@@ -3,6 +3,7 @@ version: '3'
 services:
   mysqlsrv:
     image: mysql:5.7
+    container_name: database_mysql
     environment:
       MYSQL_ROOT_PASSWORD: "admin"
       MYSQL_DATABASE: "knowledge"
@@ -10,3 +11,15 @@ services:
       - "3306:3306"
     volumes:
       - ../db:/var/lib/mysql
+  
+  mongodb:
+    image: "mongo"
+    container_name: database_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "admin"
+      MONGO_INITDB_ROOT_PASSWORD: "admin"
+      MONGO_INITDB_DATABASE: "knowledge_stats"
+    ports:
+      - 27017:27017
+    volumes:
+      - ../db:/data/db

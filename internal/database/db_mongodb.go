@@ -27,7 +27,7 @@ func Connect_MongoDB() (*mongo.Database, error) {
 		client.Disconnect(context.Background())
 	})
 
-	db := client.Database(os.Getenv("MONGO_DATABASE"))
+	db := client.Database(os.Getenv("MONGO_INITDB_DATABASE"))
 
 	return db, nil
 }
