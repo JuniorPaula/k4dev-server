@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	ConnectStringMySQL = ""
-	Port               = 0
-	SecretKey          []byte
+	ConnectStringMySQL  = ""
+	ConnetStringMongoDB = ""
+	Port                = 0
+	SecretKey           []byte
 )
 
 func InitEnv() {
@@ -30,6 +31,14 @@ func InitEnv() {
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_DATABASE"),
+	)
+
+	ConnetStringMongoDB = fmt.Sprintf("mongodb://%s:%s@%s:%s/%s",
+		os.Getenv("MONGO_USER"),
+		os.Getenv("MONGO_PASSWORD"),
+		os.Getenv("MONGO_HOST"),
+		os.Getenv("MONGO_PORT"),
+		os.Getenv("MONGO_DATABASE"),
 	)
 
 	SecretKey = []byte(os.Getenv("JWT_SECRET"))
