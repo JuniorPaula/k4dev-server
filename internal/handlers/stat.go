@@ -7,10 +7,7 @@ import (
 )
 
 func FindStat(w http.ResponseWriter, r *http.Request) {
-	stats, err := usecases.FindStatUsecase()
-	if err != nil {
-		utils.ErrorJSON(w, http.StatusInternalServerError, err)
-		return
-	}
+	stats, _ := usecases.FindStatUsecase()
+
 	utils.WriteJSON(w, http.StatusOK, stats)
 }
