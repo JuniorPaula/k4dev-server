@@ -79,8 +79,9 @@ func StatScheduleUsecase() error {
 			CreatedAt: time.Now(),
 		})
 
-		fmt.Println("[::] stats updated on success")
+		fmt.Println("stats updated on success")
 	}
 
+	fmt.Println("nothing to update")
 	return nil
 }
