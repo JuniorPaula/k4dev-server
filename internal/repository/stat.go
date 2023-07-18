@@ -6,6 +6,7 @@ import (
 	"knowledge-api/internal/models"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -35,4 +36,26 @@ func (s *stat) FindStat() (models.Stat, error) {
 	}
 
 	return stats, nil
+}
+
+func (s *stat) InsertStat(stat models.Stat) (primitive.ObjectID, error) {
+	result, err := s.Mongo.Collection("stats").InsertOne(context.Background(), stat)
+	if err != nil {
+		return primitive.NilObjectID, err
+	}
+
+	if oid, ok := result.InsertedID.(primitive.ObjectID); ok {
+		return oid, nil
+	}
+
+	return primitive.NilObjectID, nil
+}
+
+func (s *stat) UpdateStat(stat models.Stat) error {
+	_, err := s.Mongo.Collection("stats").UpdateOne(context.Background(), bson.M{}, bson.M{"$set": stat})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
