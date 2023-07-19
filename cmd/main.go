@@ -1,20 +1,28 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"knowledge-api/internal/config"
 	"knowledge-api/internal/router"
 	"knowledge-api/internal/utils"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func main() {
 	// config.InitEnv()
 	config.InitEnv()
 
-	fmt.Println("[::] Server running on port:", config.Port)
-	r := router.HanlderRoutes()
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+
+	// create the context to control of the exit
+	_, cancel := context.WithCancel(context.Background())
 
 	// init schedule stats
 	go func() {
@@ -22,5 +30,35 @@ func main() {
 		schedule.StatsSchedule()
 	}()
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r))
+	server := &http.Server{
+		Addr:    fmt.Sprintf(":%d", config.Port),
+		Handler: router.HanlderRoutes(),
+	}
+	go func() {
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("error while start the server: %v", err)
+		}
+	}()
+
+	// print out the port
+	fmt.Println("[+] server running on port:", config.Port)
+
+	// wait for the interrupt signal to gracefully shutdown the server with
+	<-interrupt
+	fmt.Println("server shutting down...")
+	cancel()
+
+	// a timeout of 5 seconds
+	timeout := 5 * time.Second
+	ctxShutDown, cancelShutdown := context.WithTimeout(context.Background(), timeout)
+	defer func() {
+		cancelShutdown()
+	}()
+
+	if err := server.Shutdown(ctxShutDown); err != nil {
+		fmt.Println("error while shutingdown....", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("server exiting")
 }
