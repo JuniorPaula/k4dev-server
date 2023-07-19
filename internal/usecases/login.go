@@ -38,3 +38,32 @@ func LoginUsecase(user models.User) (models.AuthDTO, error) {
 		Token:  token,
 	}, nil
 }
+
+func SignupUsecase(user models.User) (string, error) {
+	if err := user.HanlderUser("create"); err != nil {
+		return "", err
+	}
+
+	db, err := database.Connect_MySQL()
+	if err != nil {
+		return "", err
+	}
+	defer db.Close()
+
+	repo := repository.NewUsersRepository(db)
+	userFromDB, err := repo.FindUserByEmail(user.Email)
+	if err != nil {
+		return "", err
+	}
+
+	if userFromDB.ID != 0 {
+		return "", errors.New("user already exists")
+	}
+
+	_, err = repo.CreateUser(user)
+	if err != nil {
+		return "", err
+	}
+
+	return "user created on success", nil
+}

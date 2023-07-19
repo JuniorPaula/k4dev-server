@@ -80,8 +80,10 @@ func StatScheduleUsecase() error {
 		})
 
 		fmt.Println("stats updated on success")
+
+	} else {
+		fmt.Println("nothing to update")
 	}
 
-	fmt.Println("nothing to update")
 	return nil
 }

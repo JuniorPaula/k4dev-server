@@ -5,9 +5,17 @@ import (
 	"net/http"
 )
 
-var loginRoute = Route{
-	URI:     "/login",
-	Method:  http.MethodPost,
-	Func:    handlers.Login,
-	HasAuth: false,
+var loginRoute = []Route{
+	{
+		URI:     "/login",
+		Method:  http.MethodPost,
+		Func:    handlers.Login,
+		HasAuth: false,
+	},
+	{
+		URI:     "/signup",
+		Method:  http.MethodPost,
+		Func:    handlers.Signup,
+		HasAuth: false,
+	},
 }
