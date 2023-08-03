@@ -12,6 +12,7 @@ import (
 var (
 	ConnectStringMySQL  = ""
 	ConnetStringMongoDB = ""
+	FrontendURL         = ""
 	Port                = 0
 	SecretKey           []byte
 )
@@ -42,4 +43,5 @@ func InitEnv() {
 
 	SecretKey = []byte(os.Getenv("JWT_SECRET"))
 
+	FrontendURL = os.Getenv("FRONTEND_URL")
 }
