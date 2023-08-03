@@ -12,6 +12,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -30,9 +32,15 @@ func main() {
 		schedule.StatsSchedule()
 	}()
 
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{config.FrontendURL},
+		AllowedMethods: []string{"POST", "GET", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"Authorization", "Content-Type"},
+	})
+
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", config.Port),
-		Handler: router.HanlderRoutes(),
+		Handler: c.Handler(router.HanlderRoutes()),
 	}
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
