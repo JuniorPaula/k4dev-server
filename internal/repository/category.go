@@ -48,7 +48,7 @@ func (c *category) CreateCategory(category models.Category) (int64, error) {
 }
 
 func (c *category) FindAllCategories() ([]models.Category, error) {
-	rows, err := c.DB.Query("select id, name, parent_id from categories")
+	rows, err := c.DB.Query("select id, name, parent_id from categories order by id desc")
 	if err != nil {
 		return nil, err
 	}
