@@ -123,7 +123,7 @@ func (c *category) DeleteCategory(id int64) error {
 }
 
 func (c *category) VerifyCategoryHasParentID(id int64) (bool, error) {
-	statment, err := c.DB.Prepare("select * from categories where parent_id = ?")
+	statment, err := c.DB.Prepare("select * from categories where id = ? AND parent_id IS NOT NULL")
 	if err != nil {
 		return false, err
 	}
