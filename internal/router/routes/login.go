@@ -18,4 +18,10 @@ var loginRoute = []Route{
 		Func:    handlers.Signup,
 		HasAuth: false,
 	},
+	{
+		URI:     "/validateToken",
+		Method:  http.MethodPost,
+		Func:    handlers.VerifyIfTokenIsValid,
+		HasAuth: false,
+	},
 }

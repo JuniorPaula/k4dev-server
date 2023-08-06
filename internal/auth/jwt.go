@@ -35,6 +35,18 @@ func TokenValidate(r *http.Request) error {
 	return errors.New("invalid token")
 }
 
+func CheckToken(token string) bool {
+	jwtToken, err := jwt.Parse(token, getValidKeyAuthentication)
+	if err != nil {
+		return false
+	}
+
+	if _, ok := jwtToken.Claims.(jwt.MapClaims); ok && jwtToken.Valid {
+		return true
+	}
+	return false
+}
+
 func GetUserID(r *http.Request) (int64, error) {
 	strToken := getToken(r)
 	token, err := jwt.Parse(strToken, getValidKeyAuthentication)
