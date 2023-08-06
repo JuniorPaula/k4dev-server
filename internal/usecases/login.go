@@ -36,6 +36,7 @@ func LoginUsecase(user models.User) (models.AuthDTO, error) {
 	return models.AuthDTO{
 		UserID: userID,
 		Token:  token,
+		Role:   userFromDB.Admin,
 	}, nil
 }
 
