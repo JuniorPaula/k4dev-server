@@ -39,7 +39,7 @@ var articleRoutes = []Route{
 	{
 		URI:     "/category/{categoryId}/articles",
 		Method:  http.MethodGet,
-		Func:    handlers.FindCategoryWithChildren,
+		Func:    handlers.FindArticlesWithCategoryChildren,
 		HasAuth: true,
 	},
 }

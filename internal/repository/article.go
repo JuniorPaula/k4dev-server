@@ -122,7 +122,7 @@ func (a *article) CountArticles() (int, error) {
 	return count, nil
 }
 
-func (a *article) FindCategoryWithChildren(ids []int, page, limit int) ([]models.Article, error) {
+func (a *article) FindArticlesWithCategoryChildren(ids []int, page, limit int) ([]models.Article, error) {
 	offset := (page - 1) * limit
 
 	query := `

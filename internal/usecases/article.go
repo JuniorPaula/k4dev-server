@@ -50,7 +50,7 @@ func FindAllArticlesUsecase(page, pageSize int) ([]models.Article, error) {
 	return articles, nil
 }
 
-func FindCategoryWithChildrenUsecase(categoryID int64, page, limit int) ([]models.Article, error) {
+func FindArticlesWithCategoryChildrenUsecase(categoryID int64, page, limit int) ([]models.Article, error) {
 	db, err := database.Connect_MySQL()
 	if err != nil {
 		return nil, err
@@ -67,8 +67,11 @@ func FindCategoryWithChildrenUsecase(categoryID int64, page, limit int) ([]model
 
 	var category models.Category
 	categoryIDs := category.FindSubcategories(categories, categoryID)
+	if len(categoryIDs) == 0 {
+		return nil, errors.New("category has no articles associated")
+	}
 
-	articles, err := articlesRepo.FindCategoryWithChildren(categoryIDs, page, limit)
+	articles, err := articlesRepo.FindArticlesWithCategoryChildren(categoryIDs, page, limit)
 	if err != nil {
 		return nil, err
 	}

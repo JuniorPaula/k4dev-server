@@ -63,7 +63,7 @@ func FindAllArticles(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func FindCategoryWithChildren(w http.ResponseWriter, r *http.Request) {
+func FindArticlesWithCategoryChildren(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	categoryID, err := strconv.ParseInt(params["categoryId"], 10, 64)
 	if err != nil {
@@ -76,9 +76,9 @@ func FindCategoryWithChildren(w http.ResponseWriter, r *http.Request) {
 		page = 1
 	}
 
-	articles, err := usecases.FindCategoryWithChildrenUsecase(categoryID, page, limit)
+	articles, err := usecases.FindArticlesWithCategoryChildrenUsecase(categoryID, page, limit)
 	if err != nil {
-		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		utils.ErrorJSON(w, http.StatusNotFound, err)
 		return
 	}
 
