@@ -24,7 +24,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	authDTO, err := usecases.LoginUsecase(user)
 	if err != nil {
-		utils.ErrorJSON(w, http.StatusBadRequest, err)
+		utils.ErrorJSON(w, http.StatusUnauthorized, err)
 		return
 	}
 
