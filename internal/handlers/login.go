@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"knowledge-api/internal/auth"
 	"knowledge-api/internal/models"
@@ -72,10 +71,6 @@ func VerifyIfTokenIsValid(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isValid := auth.CheckToken(authData.Token)
-	if !isValid {
-		utils.ErrorJSON(w, http.StatusUnauthorized, errors.New("invalid token"))
-		return
-	}
 
 	utils.WriteJSON(w, http.StatusOK, map[string]interface{}{
 		"isValid": isValid,
