@@ -76,6 +76,10 @@ func FindArticlesWithCategoryChildrenUsecase(categoryID int64, page, limit int) 
 		return nil, err
 	}
 
+	if len(articles) == 0 {
+		return nil, errors.New("category has no articles associated")
+	}
+
 	return articles, nil
 }
 

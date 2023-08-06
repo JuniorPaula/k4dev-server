@@ -90,10 +90,12 @@ func (c *Category) FindSubcategories(categories []Category, categoryID int64) []
 	var subcategories []int
 
 	for _, category := range categories {
-		if category.ParentID == categoryID {
+		if category.ID == categoryID {
 			subcategories = append(subcategories, int(category.ID))
-			subcategories = append(subcategories, c.FindSubcategories(categories, category.ID)...)
 		}
+
+		childIDs := c.FindSubcategories(category.Children, categoryID)
+		subcategories = append(subcategories, childIDs...)
 	}
 
 	return subcategories
