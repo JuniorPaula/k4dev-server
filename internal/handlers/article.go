@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var limit = 10
+var limit = 3
 
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)

@@ -45,7 +45,7 @@ func StatScheduleUsecase() error {
 		return err
 	}
 
-	articles, err := articleRepo.FindAllArticles(10, 10)
+	articlesCount, err := articleRepo.CountArticles()
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,6 @@ func StatScheduleUsecase() error {
 	ltsStats, _ := statRepo.FindStat()
 
 	usersCount := len(users)
-	articlesCount := len(articles)
 	categoriesCount := len(categories)
 
 	_, err = statRepo.InsertStat(models.Stat{
