@@ -56,6 +56,13 @@ func (a *article) FindAllArticles(page, pageSize int) ([]models.Article, error) 
 			return []models.Article{}, err
 		}
 
+		authorName, err := a.getAuthorNameByID(article.UserID)
+		if err != nil {
+			return []models.Article{}, err
+		}
+
+		article.Author = authorName
+
 		articles = append(articles, article)
 	}
 
@@ -182,4 +189,15 @@ func (a *article) VerifyArticleHasCategoryID(categoryID int64) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func (a *article) getAuthorNameByID(userID int64) (string, error) {
+	var name string
+
+	query := "select name from users where id = ?"
+	if err := a.DB.QueryRow(query, userID).Scan(&name); err != nil {
+		return "", err
+	}
+
+	return name, nil
 }
