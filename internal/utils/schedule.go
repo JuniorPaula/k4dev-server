@@ -21,7 +21,7 @@ func (s *Schedule) StatsSchedule() {
 	c := s.Cron
 
 	_, err := c.AddFunc("*/1 * * * *", func() {
-		fmt.Println("star schedule stats")
+		fmt.Println("start schedule stats")
 		usecases.StatScheduleUsecase()
 	})
 	if err != nil {
