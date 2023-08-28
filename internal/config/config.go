@@ -36,7 +36,7 @@ func InitEnv() {
 
 	if os.Getenv("NODE_ENV") == "production" {
 		ConnetStringMongoDB = os.Getenv("MONGO_URL")
-		return
+
 	} else if os.Getenv("NODE_ENV") == "development" {
 		ConnetStringMongoDB = fmt.Sprintf("mongodb://%s:%s@%s:%s",
 			os.Getenv("MONGO_INITDB_ROOT_USERNAME"),
@@ -44,7 +44,7 @@ func InitEnv() {
 			os.Getenv("MONGO_HOST"),
 			os.Getenv("MONGO_PORT"),
 		)
-		return
+
 	}
 
 	SecretKey = []byte(os.Getenv("JWT_SECRET"))
