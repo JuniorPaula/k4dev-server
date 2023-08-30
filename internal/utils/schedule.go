@@ -20,7 +20,7 @@ func NewSchedule() *Schedule {
 func (s *Schedule) StatsSchedule() {
 	c := s.Cron
 
-	_, err := c.AddFunc("*/1 * * * *", func() {
+	_, err := c.AddFunc("*/5 * * * *", func() {
 		fmt.Println("start schedule stats")
 		usecases.StatScheduleUsecase()
 	})
