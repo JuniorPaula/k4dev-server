@@ -1,10 +1,10 @@
 package usecases
 
 import (
-	"fmt"
 	"knowledge-api/internal/database"
 	"knowledge-api/internal/models"
 	"knowledge-api/internal/repository"
+	"log"
 	"time"
 )
 
@@ -24,16 +24,17 @@ func FindStatUsecase() (models.Stat, error) {
 	return stats, nil
 }
 
-func StatScheduleUsecase() error {
+func StatScheduleUsecase() {
 	mongoDB, err := database.Connect_MongoDB()
 	if err != nil {
-		return err
+		log.Printf("[ERROR] connect to mongoDB: %v", err)
 	}
 
 	db, err := database.Connect_MySQL()
 	if err != nil {
-		return err
+		log.Printf("[ERROR] connect to mysql: %v", err)
 	}
+	defer db.Close()
 
 	statRepo := repository.NewStatRepository(mongoDB)
 	usersRepo := repository.NewUsersRepository(db)
@@ -42,17 +43,20 @@ func StatScheduleUsecase() error {
 
 	users, err := usersRepo.FindAllUsers()
 	if err != nil {
-		return err
+		log.Printf("[ERROR] to find users: %v", err)
+		return
 	}
 
 	articlesCount, err := articleRepo.CountArticles()
 	if err != nil {
-		return err
+		log.Printf("[ERROR] to count articles: %v", err)
+		return
 	}
 
 	categories, err := categoryRepo.FindAllCategories()
 	if err != nil {
-		return err
+		log.Printf("[ERROR] to find categories: %v", err)
+		return
 	}
 
 	ltsStats, _ := statRepo.FindStat()
@@ -60,14 +64,19 @@ func StatScheduleUsecase() error {
 	usersCount := len(users)
 	categoriesCount := len(categories)
 
-	_, err = statRepo.InsertStat(models.Stat{
-		Article:   articlesCount,
-		Category:  categoriesCount,
-		Users:     usersCount,
-		CreatedAt: time.Now(),
-	})
-	if err != nil {
-		return err
+	if (ltsStats == models.Stat{}) {
+		_, err = statRepo.InsertStat(models.Stat{
+			Article:   articlesCount,
+			Category:  categoriesCount,
+			Users:     usersCount,
+			CreatedAt: time.Now(),
+		})
+		if err != nil {
+			log.Printf("[ERROR] to insert stats: %v", err)
+			return
+		}
+
+		log.Println("[SUCCESS] stats inserted")
 	}
 
 	if ltsStats.Article != articlesCount || ltsStats.Category != categoriesCount || ltsStats.Users != usersCount {
@@ -78,11 +87,10 @@ func StatScheduleUsecase() error {
 			CreatedAt: time.Now(),
 		})
 
-		fmt.Println("stats updated on success")
+		log.Println("[SUCCESS] stats updated")
 
 	} else {
-		fmt.Println("nothing to update")
+		log.Println("[SUCCESS] stats not updated")
 	}
 
-	return nil
 }
