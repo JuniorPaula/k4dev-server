@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"fmt"
 	"knowledge-api/internal/usecases"
+	"log"
 
 	"github.com/robfig/cron/v3"
 )
@@ -21,11 +21,11 @@ func (s *Schedule) StatsSchedule() {
 	c := s.Cron
 
 	_, err := c.AddFunc("*/5 * * * *", func() {
-		fmt.Println("start schedule stats")
+		log.Println("*** start schedule stats ***")
 		usecases.StatScheduleUsecase()
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	c.Start()

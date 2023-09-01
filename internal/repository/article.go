@@ -125,7 +125,6 @@ func (a *article) CountArticles() (int, error) {
 	if err := a.DB.QueryRow(query).Scan(&count); err != nil {
 		return 0, err
 	}
-	defer a.DB.Close()
 
 	return count, nil
 }
